@@ -7,56 +7,50 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f6f9;
-            color: #333333;
+            background-color: #000000;
+            color: #ffffff;
             margin: 0;
-            padding: 15px;
+            padding: 10px;
         }
         h2 {
-            color: #1a56db;
-            font-size: 20px;
-            margin-top: 25px;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #1a56db;
+            color: #3b82f6;
+            font-size: 18px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #3b82f6;
         }
-        /* Grid Düzeni: Mobilde (dik) 2 sütun, yan çevirdikçe otomatik genişler */
+        /* Grid Düzeni: Yatayda daha fazla sütun sığması için min genişlik */
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
         }
-        /* Kart Tasarımı (Görseldeki beyaz kutular) */
+        /* Kart Tasarımı (Sadece İsim, Sade Görünüm) */
         .card {
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+            background-color: #121212;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 15px 10px;
+            padding: 16px 8px;
             text-decoration: none;
-            color: #333333;
+            color: #ffffff;
             transition: transform 0.15s ease, box-shadow 0.15s ease;
-            border: 1px solid #eaeaea;
-            min-height: 90px;
+            border: 1px solid #222222;
+            min-height: 60px;
             box-sizing: border-box;
         }
         .card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-        .card img {
-            width: 40px;
-            height: 40px;
-            object-fit: contain;
-            margin-bottom: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            border-color: #3b82f6;
         }
         .card span {
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 600;
             text-align: center;
         }
     </style>
@@ -67,23 +61,15 @@
     <h2>Televizyon</h2>
     <div class="grid-container">
         <a href="https://famelack.com/tv/tr/UyP5uli9gNPXtq" target="_blank" class="card">
-            <img src="https://www.aspor.com.tr/assets/images/favicon.ico" alt="A Spor">
             <span>A Spor</span>
         </a>
         <a href="https://famelack.com/tv/tr/e8zax7Tb0zc8Eu" target="_blank" class="card">
-            <img src="https://www.trt1.com.tr/favicon.ico" alt="TRT 1">
             <span>TRT 1</span>
         </a>
         <a href="https://famelack.com/tv/tr/w6ttDNPMaglKeI" target="_blank" class="card">
-            <img src="https://www.htspor.com/favicon.ico" alt="HT Spor">
             <span>HT Spor</span>
         </a>
-        <a href="https://www.tivibuspor.com.tr/" target="_blank" class="card">
-            <img src="https://www.tivibuspor.com.tr/favicon.ico" alt="Tivibu Spor">
-            <span>Tivibu Spor</span>
-        </a>
         <a href="https://famelack.com/tv/tr" target="_blank" class="card">
-            <img src="https://famelack.com/favicon.ico" alt="Tüm TV">
             <span>Tüm Kanallar</span>
         </a>
     </div>
@@ -92,47 +78,36 @@
     <h2>Radyo</h2>
     <div class="grid-container">
         <a href="https://famelack.com/radio/tr/pbm5NmFriHwPZE" target="_blank" class="card">
-            <img src="https://www.kralmuzik.com.tr/favicon.ico" alt="Kral FM">
             <span>Kral FM</span>
         </a>
         <a href="https://famelack.com/radio/tr/m6xDFmFIEkVsFJ" target="_blank" class="card">
-            <img src="https://www.superfm.com.tr/favicon.ico" alt="Süper FM">
             <span>Süper FM</span>
         </a>
         <a href="https://famelack.com/radio/tr/7G3ONCQiyKXI3g" target="_blank" class="card">
-            <img src="https://www.bestfm.com.tr/favicon.ico" alt="Best FM">
             <span>Best FM</span>
         </a>
         <a href="https://famelack.com/radio/tr/PaEfNXc0A5SA1k" target="_blank" class="card">
-            <img src="https://powergrup.com/favicon.ico" alt="Power FM">
             <span>Power FM</span>
         </a>
         <a href="https://famelack.com/radio/tr/PjnCNYN7hPecx6" target="_blank" class="card">
-            <img src="https://www.karadenizfm.com.tr/favicon.ico" alt="Karadeniz FM">
             <span>Karadeniz FM</span>
         </a>
         <a href="https://famelack.com/radio/tr/YlvTB1ZC8zTzDK" target="_blank" class="card">
-            <img src="https://www.kralmuzik.com.tr/favicon.ico" alt="Kral Türk Fm">
             <span>Kral Türk Fm</span>
         </a>
         <a href="https://famelack.com/radio/tr/gy9PX5XN4lLmOB" target="_blank" class="card">
-            <img src="https://powergrup.com/favicon.ico" alt="Power Türk">
             <span>Power Türk</span>
         </a>
         <a href="https://famelack.com/radio/tr/Zo09g79tLgUE4G" target="_blank" class="card">
-            <img src="https://radyoalaturka.com.tr/favicon.ico" alt="Radyo Alaturka">
             <span>Radyo Alaturka</span>
         </a>
         <a href="https://famelack.com/radio/tr/Evbh04klEcsMZz" target="_blank" class="card">
-            <img src="https://www.aspor.com.tr/assets/images/favicon.ico" alt="A Spor Radyo">
             <span>A Spor Radyo</span>
         </a>
         <a href="https://famelack.com/radio/tr" target="_blank" class="card">
-            <img src="https://famelack.com/favicon.ico" alt="Tüm Radyolar">
             <span>Tüm Radyolar</span>
         </a>
     </div>
 
 </body>
 </html>
-
