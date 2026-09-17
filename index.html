@@ -2,32 +2,68 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canlı TV ve Radyo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Canlı Medya Merkezi</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #000000;
-            color: #ffffff;
             margin: 0;
             padding: 10px;
+            background-color: #000000;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            overflow-y: auto;
+            height: 100vh;
+            box-sizing: border-box;
         }
-        h2 {
-            color: #3b82f6;
-            font-size: 18px;
-            margin-top: 20px;
-            margin-bottom: 10px;
-            padding-bottom: 6px;
-            border-bottom: 2px solid #3b82f6;
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 100%;
         }
-        /* Grid Düzeni: Yatayda daha fazla sütun sığması için min genişlik */
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+        /* Kategori Sekmeleri (Üst Bar) */
+        .tabs {
+            display: flex;
+            gap: 8px;
+        }
+        .tab-btn {
+            background-color: #1a1a1a;
+            color: #888;
+            border: 1px solid #333;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            flex: 1;
+            text-align: center;
+            outline: none;
+            transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+        }
+        .tab-btn.active {
+            background-color: #3b82f6;
+            color: #ffffff;
+            border-color: #3b82f6;
+        }
+        /* TV Kumandası Odaklanma Efekti (Focus) */
+        .tab-btn:focus, .card:focus {
+            border-color: #3b82f6 !important;
+            box-shadow: 0 0 10px #3b82f6;
+            background-color: #1f2937;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        /* Kanal Listesi Izgarası */
+        .category-content {
+            display: none;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
             gap: 10px;
-            margin-bottom: 15px;
         }
-        /* Kart Tasarımı (Sadece İsim, Sade Görünüm) */
+        .category-content.active {
+            display: grid;
+        }
+        /* Kart Tasarımı */
         .card {
             background-color: #121212;
             border-radius: 8px;
@@ -35,17 +71,18 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 16px 8px;
+            padding: 16px 10px;
             text-decoration: none;
             color: #ffffff;
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
             border: 1px solid #222222;
-            min-height: 60px;
+            min-height: 55px;
             box-sizing: border-box;
+            cursor: pointer;
+            outline: none;
+            transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
         }
         .card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
             border-color: #3b82f6;
         }
         .card span {
@@ -53,61 +90,169 @@
             font-weight: 600;
             text-align: center;
         }
+
+        /* OYUNCU (PLAYER) TAM EKRAN MODU */
+        #playerScreen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000;
+            z-index: 9999;
+            flex-direction: column;
+        }
+        .player-header {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+        }
+        .back-btn {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+        }
+        .back-btn:focus {
+            box-shadow: 0 0 10px #ffffff;
+            background-color: #2563eb;
+        }
+        .player-body {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
     </style>
 </head>
 <body>
 
-    <!-- TELEVİZYON KANALLARI -->
-    <h2>Televizyon</h2>
-    <div class="grid-container">
-        <a href="https://famelack.com/tv/tr/UyP5uli9gNPXtq" target="_blank" class="card">
-            <span>A Spor</span>
-        </a>
-        <a href="https://famelack.com/tv/tr/e8zax7Tb0zc8Eu" target="_blank" class="card">
-            <span>TRT 1</span>
-        </a>
-        <a href="https://famelack.com/tv/tr/w6ttDNPMaglKeI" target="_blank" class="card">
-            <span>HT Spor</span>
-        </a>
-        <a href="https://famelack.com/tv/tr" target="_blank" class="card">
-            <span>Tüm Kanallar</span>
-        </a>
+    <!-- ANA MENÜ ARAYÜZÜ -->
+    <div class="app-container" id="mainMenu">
+        <!-- KATEGORİ SEKMELERİ -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('tv', this)">Televizyon</button>
+            <button class="tab-btn" onclick="switchTab('radio', this)">Radyo</button>
+            <button class="tab-btn" onclick="switchTab('web', this)">Web</button>
+        </div>
+
+        <!-- TV KANALLARI PANELİ -->
+        <div id="tv" class="category-content active">
+            <a onclick="openStream('https://famelack.com/tv/tr')" class="card"><span>Tüm Kanallar</span></a>
+            <a onclick="openStream('https://famelack.com/tv/tr/UBjqGDOceqJLt2')" class="card"><span>ATV</span></a>
+            <a onclick="openStream('https://famelack.com/tv/tr/UyP5uli9gNPXtq')" class="card"><span>A Spor</span></a>
+            <a onclick="openStream('https://famelack.com/tv/tr/e8zax7Tb0zc8Eu')" class="card"><span>TRT 1</span></a>
+            <a onclick="openStream('https://famelack.com/tv/tr/w6ttDNPMaglKeI')" class="card"><span>HT Spor</span></a>
+        </div>
+
+        <!-- RADYO KANALLARI PANELİ -->
+        <div id="radio" class="category-content">
+            <a onclick="openStream('https://famelack.com/radio/tr')" class="card"><span>Tüm Radyolar</span></a>
+            <a onclick="openStream('https://famelack.com/radio/tr/pbm5NmFriHwPZE')" class="card"><span>Kral FM</span></a>
+            <a onclick="openStream('https://famelack.com/radio/tr/m6xDFmFIEkVsFJ')" class="card"><span>Süper FM</span></a>
+            <a onclick="openStream('https://famelack.com/radio/tr/7G3ONCQiyKXI3g')" class="card"><span>Best FM</span></a>
+            <a onclick="openStream('https://famelack.com/radio/tr/PaEfNXc0A5SA1k')" class="card"><span>Power FM</span></a>
+        </div>
+
+        <!-- WEB PANELİ -->
+        <div id="web" class="category-content">
+            <a href="https://www.youtube.com" target="_blank" rel="noopener" class="card"><span>YouTube</span></a>
+            <a onclick="openStream('https://famelack.com/webcams')" class="card"><span>Web Cam</span></a>
+        </div>
     </div>
 
-    <!-- RADYO KANALLARI -->
-    <h2>Radyo</h2>
-    <div class="grid-container">
-        <a href="https://famelack.com/radio/tr/pbm5NmFriHwPZE" target="_blank" class="card">
-            <span>Kral FM</span>
-        </a>
-        <a href="https://famelack.com/radio/tr/m6xDFmFIEkVsFJ" target="_blank" class="card">
-            <span>Süper FM</span>
-        </a>
-        <a href="https://famelack.com/radio/tr/7G3ONCQiyKXI3g" target="_blank" class="card">
-            <span>Best FM</span>
-        </a>
-        <a href="https://famelack.com/radio/tr/PaEfNXc0A5SA1k" target="_blank" class="card">
-            <span>Power FM</span>
-        </a>
-        <a href="https://famelack.com/radio/tr/PjnCNYN7hPecx6" target="_blank" class="card">
-            <span>Karadeniz FM</span>
-        </a>
-        <a href="https://famelack.com/radio/tr/YlvTB1ZC8zTzDK" target="_blank" class="card">
-            <span>Kral Türk Fm</span>
-        </a>
-        <a href="https://famelack.com/radio/tr/gy9PX5XN4lLmOB" target="_blank" class="card">
-            <span>Power Türk</span>
-        </a>
-        <a href="https://famelack.com/radio/tr/Zo09g79tLgUE4G" target="_blank" class="card">
-            <span>Radyo Alaturka</span>
-        </a>
-        <a href="https://famelack.com/radio/tr/Evbh04klEcsMZz" target="_blank" class="card">
-            <span>A Spor Radyo</span>
-        </a>
-        <a href="https://famelack.com/radio/tr" target="_blank" class="card">
-            <span>Tüm Radyolar</span>
-        </a>
+    <!-- GÖMÜLÜ TAM EKRAN OYNATICI EKRANI -->
+    <div id="playerScreen">
+        <div class="player-header">
+            <button class="back-btn" id="backBtn" onclick="closeStream()">← Menüye Dön</button>
+        </div>
+        <div class="player-body">
+            <iframe id="streamFrame" src="" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>
+        </div>
     </div>
+
+    <script>
+        // Sayfa açıldığında ilk elemente otomatik odaklan (Kumanda için şart)
+        window.onload = function() {
+            const firstTab = document.querySelector('.tab-btn');
+            if (firstTab) firstTab.focus();
+        };
+
+        // Sayfa açıldığında geçmişe sahte bir durum ekle (geri tuşunu yakalamak için)
+        window.history.pushState({page: "main"}, "", "");
+
+        function switchTab(tabId, btnElement) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            document.querySelectorAll('.category-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        function openStream(url) {
+            document.getElementById('streamFrame').src = url;
+            document.getElementById('playerScreen').style.display = 'flex';
+            document.getElementById('mainMenu').style.display = 'none';
+            
+            // Oynatıcı açıldığında geri butonuna odaklan (kumandayla direkt kapatılabilsin diye)
+            setTimeout(() => {
+                document.getElementById('backBtn').focus();
+            }, 100);
+
+            window.history.pushState({page: "player"}, "", "");
+        }
+
+        function closeStream() {
+            document.getElementById('streamFrame').src = ''; // Yayını durdur
+            document.getElementById('playerScreen').style.display = 'none';
+            document.getElementById('mainMenu').style.display = 'flex';
+
+            // Menüye dönünce aktif olan sekmedeki ilk karta veya sekmeye odaklan
+            const activeCard = document.querySelector('.category-content.active .card');
+            if (activeCard) activeCard.focus();
+        }
+
+        // TV Kumandası Özel Tuş Algılama (LG webOS / Tarayıcı uyumlu)
+        window.addEventListener('keydown', function(event) {
+            const playerScreen = document.getElementById('playerScreen');
+            
+            // LG TV veya kumanda tuş kodları (Return / Backspace / Escape)
+            if (event.key === "GoBack" || event.key === "Backspace" || event.keyCode === 8 || event.keyCode === 461) {
+                if (playerScreen.style.display === 'flex') {
+                    closeStream();
+                    event.preventDefault();
+                }
+            }
+        });
+
+        // Geri tuşuna basıldığında tetiklenecek olay
+        window.addEventListener('popstate', function(event) {
+            const playerScreen = document.getElementById('playerScreen');
+
+            if (playerScreen.style.display === 'flex') {
+                closeStream();
+                window.history.pushState({page: "main"}, "", "");
+            } else {
+                let cikis = confirm("Uygulamadan çıkılsın mı?");
+                if (cikis) {
+                    window.location.href = "about:blank";
+                } else {
+                    window.history.pushState({page: "main"}, "", "");
+                }
+            }
+        });
+    </script>
 
 </body>
 </html>
